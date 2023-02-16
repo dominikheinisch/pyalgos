@@ -54,14 +54,21 @@
 
 
 from copy import copy
+from typing import List, Tuple, Dict
 
 
 def solution(redirects):
-    mapping = {}
-    for entry, ending in redirects:
-        mapping[entry] = ending
-    mapping_backup = copy(mapping)
+    mapping = create_mapping(redirects)
+    entries = create_entries(redirects, copy(mapping))
+    last_to_trace = create_last_to_trace(mapping, entries)
+    return sorted([sorted(trace) for trace in last_to_trace.values()])
 
+
+def create_mapping(redirects: List[Tuple[str, str]]) -> Dict[str, str]:
+    return {entry: ending for entry, ending in redirects}
+
+
+def create_entries(redirects: List[Tuple[str, str]], mapping: Dict[str, str]) -> List[str]:
     visited = set()
     acc = set()
     for entry, _ in redirects:
@@ -79,12 +86,15 @@ def solution(redirects):
                 mapping[entry] = new_entry
             new_entry = temp_entry
         acc.add(entry)
+    return acc
 
+
+def create_last_to_trace(mapping: Dict[str, str], entries: List[str]) -> Dict[str, List[str]]:
     last_to_trace = {}
-    for entry in acc:
+    for entry in entries:
         temp_trace = [entry]
         while entry:
-            temp_entry = mapping_backup.get(entry)
+            temp_entry = mapping.get(entry)
             if temp_entry:
                 temp_trace.append(temp_entry)
             else:
@@ -92,13 +102,11 @@ def solution(redirects):
                     temp_trace = list(set([*temp_trace, *last_to_trace[entry]]))
                 last_to_trace[entry] = temp_trace
             entry = temp_entry
-    return sorted([sorted(trace) for trace in last_to_trace.values()])
+    return last_to_trace
 
 
-redirects = [["godaddy.net", "godaddy.com"],
-             ["godaddy.org", "godaddycares.com"],
-             ["godady.com", "godaddy.com"],
-             ["godaddy.ne", "godaddy.net"]]
-
-
-print(solution(redirects))
+# redirects = [["godaddy.net", "godaddy.com"],
+#              ["godaddy.org", "godaddycares.com"],
+#              ["godady.com", "godaddy.com"],
+#              ["godaddy.ne", "godaddy.net"]]
+# print(solution(redirects))
