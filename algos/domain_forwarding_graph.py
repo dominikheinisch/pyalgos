@@ -61,7 +61,10 @@ def solution(redirects):
     mapping = create_mapping(redirects)
     entries = create_entries(redirects, copy(mapping))
     last_to_trace = create_last_to_trace(mapping, entries)
-    return sorted([sorted(trace) for trace in last_to_trace.values()])
+    last_to_trace = dict(sorted(last_to_trace.items()))
+    return [
+        sorted(trace) for trace in last_to_trace.values()
+    ]
 
 
 def create_mapping(redirects: List[Tuple[str, str]]) -> Dict[str, str]:
@@ -103,10 +106,3 @@ def create_last_to_trace(mapping: Dict[str, str], entries: List[str]) -> Dict[st
                 last_to_trace[entry] = temp_trace
             entry = temp_entry
     return last_to_trace
-
-
-# redirects = [["godaddy.net", "godaddy.com"],
-#              ["godaddy.org", "godaddycares.com"],
-#              ["godady.com", "godaddy.com"],
-#              ["godaddy.ne", "godaddy.net"]]
-# print(solution(redirects))

@@ -16,6 +16,17 @@ class TestDomainForwardingGraph(unittest.TestCase):
         ]
         self.assertEqual(solution(input), expected)
 
+    def test_solution_sorting(self):
+        input = [
+            ["a", "z"],
+            ["c", "b"],
+        ]
+        expected = [
+            ["b", "c"],
+            ["a", "z"],
+        ]
+        self.assertEqual(solution(input), expected)
+
 
 if __name__ == '__main__':
     unittest.main()
